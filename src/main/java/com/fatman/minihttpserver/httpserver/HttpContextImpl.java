@@ -11,10 +11,9 @@ import java.util.logging.Logger;
 class HttpContextImpl {
     private String path;
     private String protocol;
-    private HttpHandler handler;
     private  ServerImpl server;
 
-    HttpContextImpl(String protocol, String path, HttpHandler handler, ServerImpl server) {
+    HttpContextImpl(String protocol, String path, ServerImpl server) {
         if (path == null || protocol == null || path.length() < 1 || path.charAt(0) != '/') {
             throw new IllegalArgumentException ("Illegal value for path or protocol");
         }
@@ -24,7 +23,6 @@ class HttpContextImpl {
         if (!this.protocol.equals ("http")) {
             throw new IllegalArgumentException ("Illegal value for protocol");
         }
-        this.handler = handler;
         this.server = server;
     }
 
@@ -34,10 +32,6 @@ class HttpContextImpl {
 
     public String getPath() {
         return path;
-    }
-
-    public HttpHandler getHandler() {
-        return handler;
     }
 
     public ServerImpl getServerImpl() {

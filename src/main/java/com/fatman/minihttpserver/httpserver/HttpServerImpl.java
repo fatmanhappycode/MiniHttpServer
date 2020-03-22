@@ -24,8 +24,8 @@ public class HttpServerImpl extends HttpServer {
     }
 
     @Override
-    public HttpContextImpl createContext (String path, HttpHandler handler) {
-        return server.createContext (path, handler,server);
+    public HttpContextImpl createContext (String path) {
+        return server.createContext (path,server);
     }
 
     @Override

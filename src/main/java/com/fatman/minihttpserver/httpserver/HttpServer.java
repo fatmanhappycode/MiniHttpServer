@@ -12,10 +12,9 @@ public abstract class HttpServer {
      *创建一个HttpContextImpl来监听一个路径
      *
      * @param path 监听的路径
-     * @param handler 连接成功后会执行类里面的handle方法
      * @return HttpContextImpl
      */
-    public abstract HttpContextImpl createContext (String path, HttpHandler handler);
+    public abstract HttpContextImpl createContext (String path);
 
     /**
      * 开启server，开始监听

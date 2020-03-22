@@ -22,7 +22,7 @@ public class HttpServerProvider {
      * @param  backlog
      *         可以自定义的连接排队队列，如果队列中的连接超过这个数的话就会拒绝连接
      */
-    public HttpServer createHttpServer (InetSocketAddress address, int backlog) throws IOException {
+    public static HttpServer createHttpServer (InetSocketAddress address, int backlog) throws IOException {
         return new HttpServerImpl(address, backlog);
     }
 

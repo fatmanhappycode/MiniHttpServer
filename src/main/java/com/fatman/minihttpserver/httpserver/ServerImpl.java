@@ -1,10 +1,8 @@
 package com.fatman.minihttpserver.httpserver;
 
 import com.fatman.minihttpserver.ServerConfig;
-import com.fatman.minihttpserver.use.RestParameter;
 import com.google.common.collect.Sets;
 import com.sun.net.httpserver.Headers;
-import com.sun.net.httpserver.HttpHandler;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -94,8 +92,10 @@ class ServerImpl {
             bound = true;
         }
         selector = Selector.open();
-        serverSocket.configureBlocking(true);
+        serverSocket.configureBlocking(false);
         serverSocket.register(selector, SelectionKey.OP_ACCEPT);
+
+        acceptor = new Acceptor(this);
 
         allConnections = Sets.newConcurrentHashSet();
         idleConnections = Sets.newConcurrentHashSet();
@@ -116,12 +116,12 @@ class ServerImpl {
         logger.config ("HttpServer created "+protocol+" "+ address);
     }
 
-    synchronized HttpContextImpl createContext(String path, HttpHandler handler, ServerImpl server) {
-        if (handler == null || path == null) {
-            throw new NullPointerException ("路径为null或handler为null");
+    synchronized HttpContextImpl createContext(String path, ServerImpl server) {
+        if (path == null) {
+            throw new NullPointerException ("路径为null");
         }
 
-        HttpContextImpl context = new HttpContextImpl (protocol, path, handler, server);
+        HttpContextImpl context = new HttpContextImpl (protocol, path, server);
         contexts.add (context);
         logger.config ("context created: " + path);
         return context;
@@ -132,9 +132,18 @@ class ServerImpl {
             throw new IllegalStateException ("server未绑定端口或处于已启动或已关闭状态");
         }
 
+        if (executor == null) {
+            executor = new DefaultExecutor();
+        }
         Thread t = new Thread (acceptor);
         started = true;
         t.start();
+    }
+
+    private static class DefaultExecutor implements Executor {
+        public void execute (Runnable task) {
+            task.run();
+        }
     }
 
     /**
@@ -331,6 +340,7 @@ class ServerImpl {
                                 continue;
                             }
                             SocketChannel channel = server.getServerSocket().accept();
+                            System.out.println("accept"+channel.getRemoteAddress());
                             // 根据需要开启TCPNoDelay，也就是关闭Nagle算法，减小缓存带来的延迟
                             if (ServerConfig.noDelay()) {
                                 channel.socket().setTcpNoDelay(true);
@@ -353,9 +363,10 @@ class ServerImpl {
                                     // 因为后面是先读头部，之后再读取body等其他部分的
                                     key.cancel();
                                     channel.configureBlocking (true);
-
+                                    System.out.println("++++++++++"+idleConnections.size());
                                     // 如果这个connection是之前保存着的空闲长连接，那么直接加入reqConnections开始请求（因为io流都初始化好了）
                                     if (idleConnections.remove(connection)) {
+                                        System.out.println("close conn");
                                         requestStarted(connection);
                                     }
 
@@ -489,19 +500,12 @@ class ServerImpl {
                 }
 
                 context = findContext(protocol, uri.getPath());
+                connection.setContext (context);
 
                 // 找不到监听的路径
                 if (context == null) {
                     reject(Code.HTTP_NOT_FOUND,
                             requestLine, "No context found for request");
-                    return;
-                }
-
-                // 找不到handler
-                connection.setContext(context);
-                if (context.getHandler() == null) {
-                    reject(Code.HTTP_INTERNAL_ERROR,
-                            requestLine, "No handler for context");
                     return;
                 }
 
@@ -551,17 +555,20 @@ class ServerImpl {
 
                 // +++++++++++++++++++++++++++++++++++++++++++工作++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
                 String requestMethod = exchange.getRequestMethod();
-                if (requestMethod.equalsIgnoreCase("GET")) {
+
+                if ("GET".equalsIgnoreCase(requestMethod)) {
                     Headers responseHeaders = exchange.getResponseHeaders();
-                    responseHeaders.set("Content-Type", "application/json");
-
-                    exchange.sendResponseHeaders(200, 0);
-                    // parse request
+                    String[] strings = uriStr.split("\\.");
+                    String suffix = "";
+                    if (strings.length > 1) {
+                        suffix = "." + strings[strings.length-1];
+                    }
+                    responseHeaders.set("Content-Type", ContentType.findContextType(suffix));
+                    byte[] bytes = IoUtil.readFileByBytes(ServerConfig.getSourcePath() + uriStr.substring(1));
+                    exchange.sendResponseHeaders(200, bytes.length);
                     OutputStream responseBody = exchange.getResponseBody();
-
-                    URI requestedUri = exchange.getRequestURI();
-
-                    // 这里有add event
+                    responseBody.write(bytes);
+                    responseBody.flush();
                     responseBody.close();
                 }
 
@@ -745,6 +752,7 @@ class ServerImpl {
                 }
             }
             for (HttpConnection c : toClose) {
+                System.out.println("close2");
                 idleConnections.remove (c);
                 allConnections.remove (c);
                 c.close();

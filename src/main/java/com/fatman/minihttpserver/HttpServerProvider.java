@@ -1,7 +1,7 @@
 package com.fatman.minihttpserver;
 
-import com.fatman.minihttpserver.httpserver.HttpServer;
-import com.fatman.minihttpserver.httpserver.HttpServerImpl;
+import com.fatman.minihttpserver.httpserver.server.HttpServer;
+import com.fatman.minihttpserver.httpserver.server.HttpServerImpl;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;

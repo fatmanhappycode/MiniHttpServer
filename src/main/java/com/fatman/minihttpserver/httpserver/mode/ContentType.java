@@ -1,4 +1,4 @@
-package com.fatman.minihttpserver.httpserver;
+package com.fatman.minihttpserver.httpserver.mode;
 
 import java.util.HashMap;
 

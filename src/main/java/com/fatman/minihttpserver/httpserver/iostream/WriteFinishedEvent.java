@@ -23,13 +23,15 @@
  * questions.
  */
 
-package com.fatman.minihttpserver.httpserver;
+package com.fatman.minihttpserver.httpserver.iostream;
 
-class Event {
+import com.fatman.minihttpserver.httpserver.mode.Event;
+import com.fatman.minihttpserver.httpserver.mode.ExchangeImpl;
 
-    ExchangeImpl exchange;
-
-    protected Event(ExchangeImpl t) {
-        this.exchange = t;
+public class WriteFinishedEvent extends Event {
+    public WriteFinishedEvent(ExchangeImpl t) {
+        super (t);
+        assert !t.writefinished;
+        t.writefinished = true;
     }
 }

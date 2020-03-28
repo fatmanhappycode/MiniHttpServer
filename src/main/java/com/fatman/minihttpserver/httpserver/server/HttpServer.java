@@ -1,6 +1,8 @@
-package com.fatman.minihttpserver.httpserver;
+package com.fatman.minihttpserver.httpserver.server;
 
-import com.sun.net.httpserver.HttpHandler;
+import com.fatman.minihttpserver.httpserver.mode.HttpContextImpl;
+
+import java.io.IOException;
 
 /**
  * @author 肥宅快乐码
@@ -19,5 +21,5 @@ public abstract class HttpServer {
     /**
      * 开启server，开始监听
      */
-    public abstract void start ();
+    public abstract void start () throws IOException;
 }

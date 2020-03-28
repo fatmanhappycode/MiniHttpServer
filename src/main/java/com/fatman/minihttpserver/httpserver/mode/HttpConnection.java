@@ -1,4 +1,4 @@
-package com.fatman.minihttpserver.httpserver;
+package com.fatman.minihttpserver.httpserver.mode;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,25 +11,25 @@ import java.util.logging.Logger;
  * @author 肥宅快乐码
  * @date 2020/3/10 - 11:40
  */
-class HttpConnection {
+public class HttpConnection {
 
     HttpContextImpl context;
     SocketChannel channel;
 
     InputStream inputStream;
 
-    InputStream rawInputStream;
-    OutputStream rawOutputStream;
+    public InputStream rawInputStream;
+    public OutputStream rawOutputStream;
     String protocol;
-    long time;
+    public long time;
     /**
      * 创建连接的时间
      */
-    volatile long creationTime;
+    public volatile long creationTime;
     /**
      * 开始response的时间
      */
-    volatile long rspStartedTime;
+    public volatile long rspStartedTime;
 
     boolean closed = false;
     Logger logger;
@@ -37,7 +37,7 @@ class HttpConnection {
     public enum State {IDLE, REQUEST, RESPONSE};
     volatile State state;
 
-    void setParameters (
+    public void setParameters(
             InputStream inputStream, OutputStream rawOutputStream, SocketChannel channel, String protocol,
             HttpContextImpl context, InputStream rawInputStream
     )
@@ -80,7 +80,7 @@ class HttpConnection {
         return rawOutputStream;
     }
 
-    synchronized void close () {
+    public synchronized void close() {
         if (closed) {
             return;
         }
@@ -117,7 +117,7 @@ class HttpConnection {
         }
     }
 
-    State getState() {
+    public State getState() {
         return state;
     }
 

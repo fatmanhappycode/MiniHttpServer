@@ -23,9 +23,11 @@
  * questions.
  */
 
-package com.fatman.minihttpserver.httpserver;
+package com.fatman.minihttpserver.httpserver.iostream;
 
-import com.fatman.minihttpserver.ServerConfig;
+import com.fatman.minihttpserver.httpserver.config.ServerConfig;
+import com.fatman.minihttpserver.httpserver.server.ServerImpl;
+import com.fatman.minihttpserver.httpserver.mode.ExchangeImpl;
 
 import java.io.FilterInputStream;
 import java.io.IOException;
@@ -42,7 +44,7 @@ import java.io.InputStream;
  *
  * isEOF() returns true, when all expected bytes have been read
  */
-abstract class LeftOverInputStream extends FilterInputStream {
+public abstract class LeftOverInputStream extends FilterInputStream {
      ExchangeImpl t;
      ServerImpl server;
     protected boolean closed = false;

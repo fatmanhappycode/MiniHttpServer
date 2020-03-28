@@ -23,7 +23,9 @@
  * questions.
  */
 
-package com.fatman.minihttpserver.httpserver;
+package com.fatman.minihttpserver.httpserver.iostream;
+
+import com.fatman.minihttpserver.httpserver.mode.ExchangeImpl;
 
 import java.io.FilterOutputStream;
 import java.io.IOException;
@@ -36,12 +38,12 @@ import java.io.OutputStream;
  * The underlying connection needs to be closed afterwards.
  */
 
-class UndefLengthOutputStream extends FilterOutputStream
+public class UndefLengthOutputStream extends FilterOutputStream
 {
     private boolean closed = false;
       ExchangeImpl t;
 
-    UndefLengthOutputStream (  ExchangeImpl t, OutputStream src) {
+    public UndefLengthOutputStream(ExchangeImpl t, OutputStream src) {
         super (src);
         this.t = t;
     }

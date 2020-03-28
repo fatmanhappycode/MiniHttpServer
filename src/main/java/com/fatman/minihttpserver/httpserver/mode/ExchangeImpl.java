@@ -23,8 +23,10 @@
  * questions.
  */
 
-package com.fatman.minihttpserver.httpserver;
+package com.fatman.minihttpserver.httpserver.mode;
 
+import com.fatman.minihttpserver.httpserver.iostream.*;
+import com.fatman.minihttpserver.httpserver.server.ServerImpl;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpPrincipal;
 
@@ -41,12 +43,12 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.logging.Logger;
 
-class ExchangeImpl {
+public class ExchangeImpl {
 
     Headers reqHdrs, rspHdrs;
     Request req;
     String method;
-    boolean writefinished;
+    public boolean writefinished;
     URI uri;
     HttpConnection connection;
     long reqContentLen;
@@ -56,9 +58,9 @@ class ExchangeImpl {
     OutputStream ros;
     Thread thread;
     /* close the underlying connection when this exchange finished */
-    boolean close;
+    public boolean close;
     boolean closed;
-    boolean http10 = false;
+    public boolean http10 = false;
 
     /* for formatting the Date: header */
     private static final String pattern = "EEE, dd MMM yyyy HH:mm:ss zzz";
@@ -88,8 +90,8 @@ class ExchangeImpl {
     HttpPrincipal principal;
      ServerImpl server;
 
-    ExchangeImpl (
-        String method, URI uri, Request req, long len, HttpConnection connection
+    public ExchangeImpl(
+            String method, URI uri, Request req, long len, HttpConnection connection
     ) throws IOException {
         this.req = req;
         this.reqHdrs = req.headers();
@@ -164,13 +166,13 @@ class ExchangeImpl {
             uis_orig = new ChunkedInputStream(this, ris);
             uis = uis_orig;
         } else {
-            uis_orig = new  FixedLengthInputStream(this, ris, reqContentLen);
+            uis_orig = new FixedLengthInputStream(this, ris, reqContentLen);
             uis = uis_orig;
         }
         return uis;
     }
 
-    LeftOverInputStream getOriginalInputStream () {
+    public LeftOverInputStream getOriginalInputStream() {
         return uis_orig;
     }
 
@@ -241,7 +243,7 @@ class ExchangeImpl {
         } else { /* not a HEAD request */
             if (contentLen == 0) {
                 if (http10) {
-                    o.setWrappedStream (new UndefLengthOutputStream (this, ros));
+                    o.setWrappedStream (new UndefLengthOutputStream(this, ros));
                     close = true;
                 } else {
                     rspHdrs.set ("Transfer-encoding", "chunked");
@@ -253,7 +255,7 @@ class ExchangeImpl {
                     contentLen = 0;
                 }
                 rspHdrs.set("Content-length", Long.toString(contentLen));
-                o.setWrappedStream (new FixedLengthOutputStream (this, ros, contentLen));
+                o.setWrappedStream (new FixedLengthOutputStream(this, ros, contentLen));
             }
         }
         write (rspHdrs, tmpout);
@@ -346,11 +348,11 @@ class ExchangeImpl {
     /**
      * PP
      */
-    HttpConnection getConnection () {
+    public HttpConnection getConnection() {
         return connection;
     }
 
-     ServerImpl getServerImpl () {
+     public ServerImpl getServerImpl() {
         return getHttpContext().getServerImpl();
     }
 

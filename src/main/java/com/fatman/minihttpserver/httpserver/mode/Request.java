@@ -23,9 +23,10 @@
  * questions.
  */
 
-package com.fatman.minihttpserver.httpserver;
+package com.fatman.minihttpserver.httpserver.mode;
 
-import com.fatman.minihttpserver.ServerConfig;
+import com.fatman.minihttpserver.httpserver.config.ServerConfig;
+import com.fatman.minihttpserver.httpserver.server.ServerImpl;
 import com.sun.net.httpserver.Headers;
 
 import java.io.IOException;
@@ -38,7 +39,7 @@ import java.nio.channels.SocketChannel;
 
 /**
  */
-class Request {
+public class Request {
 
     final static int BUF_LEN = 2048;
     final static byte CR = 13;
@@ -49,7 +50,7 @@ class Request {
     private InputStream is;
     private OutputStream os;
 
-    Request(InputStream rawInputStream, OutputStream rawout) throws IOException {
+    public Request(InputStream rawInputStream, OutputStream rawout) throws IOException {
         is = rawInputStream;
         os = rawout;
         do {
@@ -124,7 +125,7 @@ class Request {
 
     Headers hdrs = null;
     @SuppressWarnings("fallthrough")
-    Headers headers () throws IOException {
+    public Headers headers() throws IOException {
         if (hdrs != null) {
             return hdrs;
         }
@@ -223,7 +224,7 @@ class Request {
      * Implements blocking reading semantics on top of a non-blocking channel
      */
 
-    static class ReadStream extends InputStream {
+    public static class ReadStream extends InputStream {
         SocketChannel channel;
         ByteBuffer chanbuf;
         byte[] one;
@@ -354,7 +355,7 @@ class Request {
         }
     }
 
-    static class WriteStream extends OutputStream {
+    public static class WriteStream extends OutputStream {
         SocketChannel channel;
         ByteBuffer buf;
         SelectionKey key;

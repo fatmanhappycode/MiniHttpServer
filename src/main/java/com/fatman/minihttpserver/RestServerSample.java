@@ -1,10 +1,11 @@
 package com.fatman.minihttpserver;
 
-import com.fatman.minihttpserver.HttpServerProvider;
-import com.fatman.minihttpserver.httpserver.*;
+import com.fatman.minihttpserver.httpserver.server.HttpServer;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.concurrent.*;
 
 public class RestServerSample {
 

@@ -23,13 +23,15 @@
  * questions.
  */
 
-package com.fatman.minihttpserver.httpserver;
+package com.fatman.minihttpserver.httpserver.iostream;
+
+import com.fatman.minihttpserver.httpserver.mode.ExchangeImpl;
 
 import java.io.IOException;
 import java.io.InputStream;
 
-class ChunkedInputStream extends LeftOverInputStream {
-    ChunkedInputStream(ExchangeImpl t, InputStream src) {
+public class ChunkedInputStream extends LeftOverInputStream {
+    public ChunkedInputStream(ExchangeImpl t, InputStream src) {
         super (t, src);
     }
 

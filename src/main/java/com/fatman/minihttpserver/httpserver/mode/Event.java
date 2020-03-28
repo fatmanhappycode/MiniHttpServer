@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2008, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2012, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -23,10 +23,14 @@
  * questions.
  */
 
-package com.fatman.minihttpserver.httpserver;
+package com.fatman.minihttpserver.httpserver.mode;
 
-import java.io.IOException;
 
-class StreamClosedException extends IOException {
-    private static final long serialVersionUID = -4485921499356327937L;
+public class Event {
+
+    public ExchangeImpl exchange;
+
+    public Event(ExchangeImpl t) {
+        this.exchange = t;
+    }
 }

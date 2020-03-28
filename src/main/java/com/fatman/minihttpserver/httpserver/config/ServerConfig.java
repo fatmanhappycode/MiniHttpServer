@@ -23,7 +23,7 @@
  * questions.
  */
 
-package com.fatman.minihttpserver;
+package com.fatman.minihttpserver.httpserver.config;
 
 import java.security.PrivilegedAction;
 import java.util.logging.Logger;

@@ -23,9 +23,9 @@
  * questions.
  */
 
-package com.fatman.minihttpserver.httpserver;
+package com.fatman.minihttpserver.httpserver.mode;
 
-class Code {
+public class Code {
 
     public static final int HTTP_CONTINUE = 100;
     public static final int HTTP_OK = 200;
@@ -64,7 +64,7 @@ class Code {
     public static final int HTTP_GATEWAY_TIMEOUT = 504;
     public static final int HTTP_VERSION = 505;
 
-    static String msg (int code) {
+    public static String msg (int code) {
 
       switch (code) {
         case HTTP_OK: return " OK";

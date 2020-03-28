@@ -23,7 +23,9 @@
  * questions.
  */
 
-package com.fatman.minihttpserver.httpserver;
+package com.fatman.minihttpserver.httpserver.iostream;
+
+import com.fatman.minihttpserver.httpserver.mode.ExchangeImpl;
 
 import java.io.FilterOutputStream;
 import java.io.IOException;
@@ -37,14 +39,14 @@ import java.io.OutputStream;
  * normal close() does not close the underlying stream
  */
 
-class FixedLengthOutputStream extends FilterOutputStream
+public class FixedLengthOutputStream extends FilterOutputStream
 {
     private long remaining;
     private boolean eof = false;
     private boolean closed = false;
      ExchangeImpl t;
 
-    FixedLengthOutputStream(ExchangeImpl t, OutputStream src, long len) {
+    public FixedLengthOutputStream(ExchangeImpl t, OutputStream src, long len) {
         super (src);
         this.t = t;
         this.remaining = len;
@@ -56,7 +58,7 @@ class FixedLengthOutputStream extends FilterOutputStream
         }
         eof = (remaining == 0);
         if (eof) {
-            throw new  StreamClosedException();
+            throw new StreamClosedException();
         }
         out.write(b);
         remaining --;

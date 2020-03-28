@@ -1,4 +1,4 @@
-package com.fatman.minihttpserver.httpserver;
+package com.fatman.minihttpserver.httpserver.iostream;
 
 import java.io.File;
 import java.io.FileInputStream;

@@ -23,7 +23,9 @@
  * questions.
  */
 
-package com.fatman.minihttpserver.httpserver;
+package com.fatman.minihttpserver.httpserver.iostream;
+
+import com.fatman.minihttpserver.httpserver.mode.ExchangeImpl;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,10 +36,10 @@ import java.io.InputStream;
  * close() does not close the underlying stream
  */
 
-class FixedLengthInputStream extends LeftOverInputStream {
+public class FixedLengthInputStream extends LeftOverInputStream {
     private long remaining;
 
-    FixedLengthInputStream(ExchangeImpl t, InputStream src, long len) {
+    public FixedLengthInputStream(ExchangeImpl t, InputStream src, long len) {
         super (t, src);
         this.remaining = len;
     }

@@ -23,7 +23,9 @@
  * questions.
  */
 
-package com.fatman.minihttpserver.httpserver;
+package com.fatman.minihttpserver.httpserver.iostream;
+
+import com.fatman.minihttpserver.httpserver.mode.ExchangeImpl;
 
 import java.io.FilterOutputStream;
 import java.io.IOException;
@@ -46,7 +48,7 @@ import java.io.OutputStream;
  * 0\r\n\r\n
  */
 
-class ChunkedOutputStream extends FilterOutputStream
+public class ChunkedOutputStream extends FilterOutputStream
 {
     private boolean closed = false;
     /* max. amount of user data per chunk */
@@ -58,7 +60,7 @@ class ChunkedOutputStream extends FilterOutputStream
     private byte[] buf = new byte [CHUNK_SIZE+OFFSET+2];
      ExchangeImpl t;
 
-    ChunkedOutputStream ( ExchangeImpl t, OutputStream src) {
+    public ChunkedOutputStream(ExchangeImpl t, OutputStream src) {
         super (src);
         this.t = t;
     }
@@ -66,7 +68,7 @@ class ChunkedOutputStream extends FilterOutputStream
     @Override
     public void write (int b) throws IOException {
         if (closed) {
-            throw new  StreamClosedException();
+            throw new StreamClosedException();
         }
         buf [pos++] = (byte)b;
         count ++;

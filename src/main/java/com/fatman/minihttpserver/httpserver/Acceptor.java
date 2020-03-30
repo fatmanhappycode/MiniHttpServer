@@ -45,6 +45,7 @@ public class Acceptor implements Runnable{
                     channel.socket().setTcpNoDelay(true);
                 }
                 channel.configureBlocking(false);
+                // 交由
                 server.getPoller().register(channel, new HttpConnection(), SelectionKey.OP_READ, false);
             } catch (InterruptedException | IOException e) {
                 e.printStackTrace();

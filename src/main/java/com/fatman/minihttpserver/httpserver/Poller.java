@@ -75,23 +75,21 @@ public class Poller implements Runnable{
                         keyCount > 0 ? selector.selectedKeys().iterator() : null;
                 while (iterator != null && iterator.hasNext()) {
                     SelectionKey key = iterator.next();
-                    if (key.isReadable()) {
-                        iterator.remove();
-                        channel = (SocketChannel) key.channel();
-                        connection = (HttpConnection) key.attachment();
-                        // 这里的这种先取消注册并设置为阻塞的读取方式与多次读取有关
-                        // 因为后面是先读头部，之后再读取body等其他部分的
-                        key.cancel();
-                        channel.configureBlocking(true);
-                        System.out.println("++++++++++" + server.idleConnections.size());
-                        // 如果这个connection是之前保存着的空闲长连接，那么直接加入reqConnections开始请求（因为io流都初始化好了）
-                        if (server.idleConnections.remove(connection)) {
-                            System.out.println("close conn");
-                            server.requestStarted(connection);
-                        }
-                        //do
-                        server.executor.execute(new Worker(channel, connection, server));
+                    iterator.remove();
+                    channel = (SocketChannel) key.channel();
+                    connection = (HttpConnection) key.attachment();
+                    // 这里的这种先取消注册并设置为阻塞的读取方式与多次读取有关
+                    // 因为后面是先读头部，之后再读取body等其他部分的
+                    key.cancel();
+                    channel.configureBlocking(true);
+//                    System.out.println("++++++++++" + server.idleConnections.size());
+                    // 如果这个connection是之前保存着的空闲长连接，那么直接加入reqConnections开始请求（因为io流都初始化好了）
+                    if (server.idleConnections.remove(connection)) {
+//                        System.out.println("close conn");
+                        server.requestStarted(connection);
                     }
+                    //do
+                    server.executor.execute(new Worker(channel, connection, server));
                 }
                 // 调用select去掉cancel了的key
                 selector.selectNow();

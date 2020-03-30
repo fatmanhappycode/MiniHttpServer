@@ -102,8 +102,7 @@ public class ServerImpl {
             bound = true;
         }
         selector = Selector.open();
-        serverSocket.configureBlocking(false);
-        serverSocket.register(selector, SelectionKey.OP_ACCEPT);
+        serverSocket.configureBlocking(true);
 
         acceptor = new Acceptor(this);
 

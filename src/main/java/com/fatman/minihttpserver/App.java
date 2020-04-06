@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.concurrent.*;
 
-public class RestServerSample {
+public class App {
 
     public static void serverStart() throws IOException {
         HttpServer httpserver = HttpServerProvider.createHttpServer(new InetSocketAddress(8080), 0);
